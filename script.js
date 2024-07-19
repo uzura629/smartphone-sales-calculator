@@ -1,7 +1,7 @@
 const partsCosts = {
-    'iPhone6': { 'lcd': 1600, 'battery': 1000, 'batteryTag': 1200, 'faceidTag': 0, 'housing': 2000 },
-    'iPhone7': { 'lcd': 1800, 'battery': 1100, 'batteryTag': 1300, 'faceidTag': 0, 'housing': 2200 },
-    'iPhone8': { 'lcd': 2000, 'battery': 1200, 'batteryTag': 1400, 'faceidTag': 0, 'housing': 2400 },
+    'iPhone6s': { 'lcd': 1600, 'battery': 1500, 'batteryTag': 0, 'faceidTag': 0, 'housing': 0 },
+    'iPhone7': { 'lcd': 1900, 'battery': 1700, 'batteryTag': 0, 'faceidTag': 0, 'housing': 0 },
+    'iPhone8': { 'lcd': 2500, 'battery': 1700, 'batteryTag': 0, 'faceidTag': 0, 'housing': 0 },
     'iPhoneX': { 'lcd': 2500, 'battery': 1300, 'batteryTag': 1500, 'faceidTag': 1000, 'housing': 2600 },
     'iPhoneXS': { 'lcd': 2700, 'battery': 1400, 'batteryTag': 1600, 'faceidTag': 1100, 'housing': 2800 },
     'iPhoneXSMax': { 'lcd': 3000, 'battery': 1500, 'batteryTag': 1700, 'faceidTag': 1200, 'housing': 3000 },
