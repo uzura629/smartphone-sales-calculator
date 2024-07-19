@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スマートフォン販売計算機</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>スマートフォン販売計算機</h1>
+        <form id="salesForm">
+            <label for="productName">商品名:</label>
+            <select id="productName" required>
+                <option value="">選択してください</option>
+                <option value="iPhone6">iPhone6</option>
+                <option value="iPhone7">iPhone7</option>
+                <option value="iPhone8">iPhone8</option>
+                <option value="iPhoneX">iPhoneX</option>
+                <option value="iPhoneXS">iPhoneXS</option>
+                <option value="iPhoneXSMax">iPhoneXSMax</option>
+                <option value="iPhoneXR">iPhoneXR</option>
+                <option value="iPhone11">iPhone11</option>
+                <option value="iPhone11Pro">iPhone11Pro</option>
+                <option value="iPhone11ProMax">iPhone11ProMax</option>
+                <option value="iPhone12">iPhone12</option>
+                <option value="iPhone12Mini">iPhone12Mini</option>
+                <option value="iPhone12Pro">iPhone12Pro</option>
+                <option value="iPhone12ProMax">iPhone12ProMax</option>
+            </select>
+
+            <label for="partsName">パーツ名:</label>
+            <select id="partsName" required>
+                <option value="">選択してください</option>
+                <option value="lcd">LCD</option>
+                <option value="battery">バッテリー</option>
+                <option value="batteryTag">バッテリー＋タグ</option>
+                <option value="faceidTag">FaceIDタグ</option>
+                <option value="housing">ハウジング</option>
+            </select>
+
+            <label for="partsCost">パーツ代:</label>
+            <input type="number" id="partsCost" required readonly>
+
+            <label for="purchasePrice">仕入れ値:</label>
+            <input type="number" id="purchasePrice" required>
+
+            <label for="sellingPrice">販売価格:</label>
+            <input type="number" id="sellingPrice" required>
+
+            <button type="submit">計算</button>
+        </form>
+
+        <div id="result" class="hidden">
+            <h2>計算結果</h2>
+            <p>利益額: <span id="profit"></span>円</p>
+            <p>利益率: <span id="profitMargin"></span>%</p>
+            <button id="saveButton">保存</button>
+        </div>
+
+        <div id="savedResults">
+            <h2>保存された結果</h2>
+            <ul id="resultsList"></ul>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
