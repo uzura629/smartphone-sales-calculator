@@ -1,3 +1,16 @@
+function checkLocalStorage() {
+    try {
+        localStorage.setItem('test', 'test');
+        localStorage.removeItem('test');
+        return true;
+    } catch(e) {
+        return false;
+    }
+}
+
+if (!checkLocalStorage()) {
+    alert('お使いのブラウザでローカルストレージが利用できません。データの保存ができない可能性があります。');
+}
 const partsCosts = {
     'iPhone6s': { 'lcd': 1600, 'battery': 1500, 'batteryTag': 1700, 'faceid': 0, 'homeButton': 200 },
     'iPhone6sPlus': { 'lcd': 1600, 'battery': 1500, 'batteryTag': 1700, 'faceid': 0, 'homeButton': 200 },
@@ -66,26 +79,38 @@ document.getElementById('salesForm').addEventListener('submit', function(e) {
 });
 
 document.getElementById('saveButton').addEventListener('click', function() {
-    const productName = document.getElementById('productName').value;
-    const partsName1 = document.getElementById('partsName1').value;
-    const partsName2 = document.getElementById('partsName2').value;
-    const profit = parseFloat(document.getElementById('profit').textContent);
-    const profitMargin = document.getElementById('profitMargin').textContent;
-    const purchasePrice = parseFloat(document.getElementById('purchasePrice').value);
-    const partsCost1 = parseFloat(document.getElementById('partsCost1').value);
-    const partsCost2 = parseFloat(document.getElementById('partsCost2').value) || 0;
+    try {
+        const productName = document.getElementById('productName').value;
+        const partsName1 = document.getElementById('partsName1').value;
+        const partsName2 = document.getElementById('partsName2').value;
+        const profit = parseFloat(document.getElementById('profit').textContent);
+        const profitMargin = document.getElementById('profitMargin').textContent;
+        const purchasePrice = parseFloat(document.getElementById('purchasePrice').value);
+        const partsCost1 = parseFloat(document.getElementById('partsCost1').value);
+        const partsCost2 = parseFloat(document.getElementById('partsCost2').value) || 0;
 
-    const savedResults = JSON.parse(localStorage.getItem('savedResults')) || [];
-    const newResult = {
-        id: Date.now(),
-        productName,
-        partsName1,
-        partsName2,
-        profit,
-        profitMargin,
-        purchasePrice,
-        partsCost: partsCost1 + partsCost2
-    };
+        const savedResults = JSON.parse(localStorage.getItem('savedResults')) || [];
+        const newResult = {
+            id: Date.now(),
+            productName,
+            partsName1,
+            partsName2,
+            profit,
+            profitMargin,
+            purchasePrice,
+            partsCost: partsCost1 + partsCost2
+        };
+        savedResults.push(newResult);
+        localStorage.setItem('savedResults', JSON.stringify(savedResults));
+
+        updateResultsList();
+        updateTotals();
+        alert('データが正常に保存されました。');
+    } catch (error) {
+        console.error('保存中にエラーが発生しました:', error);
+        alert('データの保存中にエラーが発生しました。もう一度お試しください。');
+    }
+});
     savedResults.push(newResult);
     localStorage.setItem('savedResults', JSON.stringify(savedResults));
 
