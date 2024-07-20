@@ -8,6 +8,7 @@
     <meta http-equiv="Expires" content="0">
     <title>スマートフォン販売計算機</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
@@ -96,7 +97,7 @@
         </form>
 
         <div id="suggestedPriceContainer" style="display: none;">
-            <p>提案販売価格 (20%以上の利益率): <span id="suggestedPrice"></span>円</p>
+            <p>提案販売価格 (20%以上の利益率を目指す): <span id="suggestedPrice"></span>円</p>
             <p><span id="suggestedPriceDetails"></span></p>
         </div>
 
@@ -115,8 +116,47 @@
             <ul id="resultsList"></ul>
             <button id="clearButton">全ての保存データを消去</button>
         </div>
+
+        <div id="chartContainer">
+            <canvas id="monthlyChart"></canvas>
+        </div>
     </div>
 
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>データ編集</h2>
+            <form id="editForm">
+                <input type="hidden" id="editId">
+                <label for="editProductName">商品名:</label>
+                <input type="text" id="editProductName" required>
+                <label for="editStorage">ストレージ:</label>
+                <select id="editStorage" required>
+                    <option value="16">16GB</option>
+                    <option value="32">32GB</option>
+                    <option value="64">64GB</option>
+                    <option value="128">128GB</option>
+                    <option value="256">256GB</option>
+                    <option value="512">512GB</option>
+                </select>
+                <label for="editPartsName1">パーツ名1:</label>
+                <input type="text" id="editPartsName1">
+                <label for="editPartsName2">パーツ名2:</label>
+                <input type="text" id="editPartsName2">
+                <label for="editPartsName3">パーツ名3:</label>
+                <input type="text" id="editPartsName3">
+                <label for="editPurchasePrice">仕入れ値:</label>
+                <input type="number" id="editPurchasePrice" required>
+                <label for="editSellingPrice">販売価格:</label>
+                <input type="number" id="editSellingPrice" required>
+                <label for="editShippingCost">送料:</label>
+                <input type="number" id="editShippingCost" required>
+                <button type="submit">更新</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="chart-script.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

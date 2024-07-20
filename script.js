@@ -155,6 +155,7 @@ document.getElementById('saveButton').addEventListener('click', function() {
         localStorage.setItem('savedResults', JSON.stringify(savedResults));
 
         updateResultsList();
+        updateChart();
         alert('データが正常に保存されました。');
     } catch (error) {
         console.error('保存中にエラーが発生しました:', error);
@@ -168,20 +169,30 @@ function updateResultsList() {
     resultsList.innerHTML = '';
 
     savedResults.forEach(result => {
+        const date = new Date(result.id);
+        const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
         const resultItem = document.createElement('li');
         resultItem.innerHTML = `
-            ${result.productName} - ${result.partsName1}${result.partsName2 ? ', ' + result.partsName2 : ''}${result.partsName3 ? ', ' + result.partsName3 : ''}: 
+            ${formattedDate}: ${result.productName} - ${result.partsName1}${result.partsName2 ? ', ' + result.partsName2 : ''}${result.partsName3 ? ', ' + result.partsName3 : ''}: 
             利益 ${result.profit}円 (${result.profitMargin}%)
+            <button class="editButton" data-id="${result.id}">編集</button>
             <button class="deleteButton" data-id="${result.id}">削除</button>
         `;
         resultsList.appendChild(resultItem);
     });
 
-    addDeleteListeners();
+    addEditDeleteListeners();
     updateTotals(savedResults);
 }
 
-function addDeleteListeners() {
+function addEditDeleteListeners() {
+    document.querySelectorAll('.editButton').forEach(button => {
+        button.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            openEditModal(id);
+        });
+    });
+
     document.querySelectorAll('.deleteButton').forEach(button => {
         button.addEventListener('click', function() {
             const id = this.getAttribute('data-id');
@@ -211,16 +222,86 @@ function deleteResult(id) {
     savedResults = savedResults.filter(result => result.id != id);
     localStorage.setItem('savedResults', JSON.stringify(savedResults));
     updateResultsList();
+    updateChart();
 }
 
 document.getElementById('clearButton').addEventListener('click', function() {
     if (confirm('全ての保存データを消去してよろしいですか？')) {
         localStorage.removeItem('savedResults');
         updateResultsList();
+        updateChart();
+    }
+});
+
+function openEditModal(id) {
+    const savedResults = JSON.parse(localStorage.getItem('savedResults')) || [];
+    const result = savedResults.find(r => r.id == id);
+    if (result) {
+        document.getElementById('editId').value = result.id;
+        const [productName, storage] = result.productName.split(' ');
+        document.getElementById('editProductName').value = productName;
+        document.getElementById('editStorage').value = storage.replace('GB', '');
+        document.getElementById('editPartsName1').value = result.partsName1 || '';
+        document.getElementById('editPartsName2').value = result.partsName2 || '';
+        document.getElementById('editPartsName3').value = result.partsName3 || '';
+        document.getElementById('editPurchasePrice').value = result.purchasePrice;
+        document.getElementById('editSellingPrice').value = result.sellingPrice;
+        document.getElementById('editShippingCost').value = result.shippingCost;
+        document.getElementById('editModal').style.display = 'block';
+    }
+}
+
+document.getElementById('editForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const id = document.getElementById('editId').value;
+    const productName = document.getElementById('editProductName').value;
+    const storage = document.getElementById('editStorage').value;
+    const partsName1 = document.getElementById('editPartsName1').value;
+    const partsName2 = document.getElementById('editPartsName2').value;
+    const partsName3 = document.getElementById('editPartsName3').value;
+    const purchasePrice = parseInt(document.getElementById('editPurchasePrice').value);
+    const sellingPrice = parseInt(document.getElementById('editSellingPrice').value);
+    const shippingCost = parseInt(document.getElementById('editShippingCost').value);
+
+    let savedResults = JSON.parse(localStorage.getItem('savedResults')) || [];
+    const index = savedResults.findIndex(r => r.id == id);
+    if (index !== -1) {
+        const totalCost = purchasePrice + shippingCost;
+        const commission = Math.round(sellingPrice * 0.1);
+        const profit = sellingPrice - totalCost - commission;
+        const profitMargin = Math.round((profit / sellingPrice) * 100);
+
+        savedResults[index] = {
+            ...savedResults[index],
+            productName: `${productName} ${storage}GB`,
+            partsName1,
+            partsName2,
+            partsName3,
+            purchasePrice,
+            sellingPrice,
+            shippingCost,
+            profit,
+            profitMargin
+        };
+        localStorage.setItem('savedResults', JSON.stringify(savedResults));
+        updateResultsList();
+        updateChart();
+        document.getElementById('editModal').style.display = 'none';
+    }
+});
+
+document.querySelector('.close').addEventListener('click', function() {
+    document.getElementById('editModal').style.display = 'none';
+});
+
+window.addEventListener('click', function(event) {
+    if (event.target == document.getElementById('editModal')) {
+        document.getElementById('editModal').style.display = 'none';
     }
 });
 
 // ページ読み込み時に保存された結果を表示
 window.addEventListener('load', function() {
     updateResultsList();
+    updateChart();
 });
